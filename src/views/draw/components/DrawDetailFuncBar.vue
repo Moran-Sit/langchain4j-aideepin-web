@@ -59,7 +59,7 @@ async function handleStar(uuid: string) {
           {{ draw.userName }}
           <template #avatar>
             <NAvatar
-              :src="`/api/user/avatar/${draw.userUuid}`" size="large" :fallback-src="defaultAvatar"
+              :src="draw.userUuid ? `/api/user/avatar/${draw.userUuid}` : defaultAvatar" size="large" :fallback-src="defaultAvatar"
               color="#ff0000000"
             />
           </template>
