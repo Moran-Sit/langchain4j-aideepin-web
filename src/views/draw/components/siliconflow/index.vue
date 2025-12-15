@@ -15,7 +15,6 @@ const emit = defineEmits<Emit>()
 const tabObjs = ref<TabObj[]>([
   { name: 'tab_generate_image', defaultTab: '文生图', tab: '文生图 ↓' },
 ])
-const interactingMethod = ref<string>(tabObjs.value[0].name)
 const tabPanelShow = ref<boolean>(true)
 
 function handleClick(tabOjb: TabObj) {
