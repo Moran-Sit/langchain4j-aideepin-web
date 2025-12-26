@@ -170,10 +170,6 @@ pnpm build
 
 ## 常见问题
 
-Q: 为什么 `Git` 提交总是报错？
-
-A: 因为有提交信息验证，请遵循 [Commit 指南](./CONTRIBUTING.md)
-
 Q: 如果只使用前端页面，在哪里改请求接口？
 
 A: 根目录下 `.env` 文件中的 `VITE_GLOB_API_URL` 字段。

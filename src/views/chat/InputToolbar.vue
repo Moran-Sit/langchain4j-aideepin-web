@@ -130,6 +130,25 @@ async function toogleThinking() {
     ms.warning('深度思考已关闭')
 }
 
+async function toogleWebSearch() {
+  if (!appStore.selectedLLM.isSupportWebSearch) {
+    console.log('该模型不支持联网搜索功能的开启或关闭')
+    return
+  }
+  currConv.value.isEnableWebSearch = !currConv.value.isEnableWebSearch
+  try {
+    await api.convEdit(currConv.value.uuid, { isEnableWebSearch: currConv.value.isEnableWebSearch })
+  } catch (err) {
+    console.error('toogleWebSearch error', err)
+    ms.error(`操作失败${err}`, { duration: 2000 })
+    return
+  }
+  if (currConv.value.isEnableWebSearch)
+    ms.success('联网搜索已开启')
+  else
+    ms.warning('联网搜索已关闭')
+}
+
 watch(
   () => appStore.selectedLLM,
   (newVal) => {
@@ -181,6 +200,27 @@ watch(
               </div>
             </template>
             <span> 模型不支持深度思考功能 </span>
+          </NPopover>
+        </template>
+      </div>
+      <div
+        class="rounded border hover:border-green-600 text-green-600 p-1"
+        :class="{ 'cursor-pointer': appStore.selectedLLM.isSupportWebSearch, 'cursor-not-allowed': !appStore.selectedLLM.isSupportWebSearch }"
+        @click="toogleWebSearch"
+      >
+        <template v-if="appStore.selectedLLM.isSupportWebSearch">
+          联网搜索
+          <NSwitch :value="currConv.isEnableWebSearch" size="small" />
+        </template>
+        <template v-if="!appStore.selectedLLM.isSupportWebSearch">
+          <NPopover trigger="hover">
+            <template #trigger>
+              <div>
+                联网搜索
+                <NSwitch :value="false" size="small" disabled />
+              </div>
+            </template>
+            <span> 模型不支持联网搜索功能 </span>
           </NPopover>
         </template>
       </div>
