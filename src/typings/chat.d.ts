@@ -78,6 +78,7 @@ declare namespace Chat {
 		answerContentType: number // 1: auto, 2: text, 3: audio
 		isAutoplayAnswer: boolean //聊天时音频类型的响应内容是否自动播放
 		isEnableThinking: boolean //是否启用思考过程
+		isEnableWebSearch: boolean //是否启用网络搜索
 		audioConfig: AudioConfig //语音配置
 	}
 

@@ -44,6 +44,7 @@ interface AiModelInfo {
   inputTypes: string
   isReasoner: boolean
   isThinkingClosable: boolean
+  isSupportWebSearch: boolean
   properties: object
 
   //for NSelector

@@ -96,6 +96,7 @@ export function emptyAiModel() {
     inputTypes: 'text',
     isReasoner: false,
     isThinkingClosable: false,
+    isSupportWebSearch: false,
     properties: {} as object,
 
     // for NSelector
@@ -230,6 +231,7 @@ export function emptyConv(): Chat.Conversation {
     answerContentType: CHAT_MESSAGE_CONTENT_TYPE.auto, // 1: auto, 2: text, 3: audio
     isAutoplayAnswer: false, // 聊天时音频类型的响应内容是否自动播放
     isEnableThinking: false, // 是否启用思考过程
+    isEnableWebSearch: false, // 是否启用网络搜索
     audioConfig: {
       voice: {
         param_name: '',
