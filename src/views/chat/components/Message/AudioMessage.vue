@@ -40,9 +40,7 @@ const appStore = useAppStore()
 const authStore = useAuthStore()
 const { isMobile } = useBasicLayout()
 const { iconRender } = useIconRender()
-const textRef = ref<HTMLElement>()
 const asRawText = ref(props.inversion)
-const messageRef = ref<HTMLElement>()
 const token = ref<string>(authStore.token)
 let audioQueue: AudioQueue | null = null
 
