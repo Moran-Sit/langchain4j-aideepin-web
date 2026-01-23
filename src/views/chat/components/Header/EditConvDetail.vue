@@ -3,7 +3,6 @@ import { ref, watch } from 'vue'
 import { NButton, NCheckbox, NCheckboxGroup, NFlex, NIcon, NInput, NPopconfirm, NRadio, NRadioGroup, NTag, NTooltip, useMessage } from 'naive-ui'
 import { QuestionCircle16Regular } from '@vicons/fluent'
 import ConvKnowledgeSelector from '@/views/chat/ConvKnowledgeSelector.vue'
-import { useScroll } from '@/views/chat/hooks/useScroll'
 import { useAppStore, useChatStore, useMcpStore } from '@/store'
 import { router } from '@/router'
 import { debounce } from '@/utils/functions/debounce'
@@ -21,7 +20,6 @@ const emit = defineEmits<Emit>()
 const appStore = useAppStore()
 const chatStore = useChatStore()
 const mcpStore = useMcpStore()
-const { scrollRef } = useScroll()
 const tmpConv = ref<Chat.Conversation>(emptyConv())
 const ms = useMessage()
 const submitting = ref<boolean>(false)
@@ -29,6 +27,13 @@ const knowledgeModalShow = ref<boolean>(false)
 
 function initEditConv(item: Chat.Conversation) {
   Object.assign(tmpConv.value, item)
+  if (!tmpConv.value.audioConfig.voice) {
+    tmpConv.value.audioConfig.voice = {
+      param_name: '',
+      model: '',
+      platform: '',
+    }
+  }
   tmpConv.value.kbIds = []
   tmpConv.value.convKnowledgeList = []
   tmpConv.value.kbIds.push(...item.kbIds)
@@ -287,8 +292,8 @@ const handleDeleteDebounce = debounce(handleDelete, 600)
             name="audioConfigRadio" class="flex flex-col space-y-2" size="small" @update:value="handleUpdateVoice"
           >
             <NRadio
-              v-for="voice in appStore.availableVoices" :key="voice.param_name" :value="voice.param_name"
-              :title="voice.remark"
+              v-for="voice in appStore.availableVoices" :key="voice.param_name || voice.name"
+              :value="voice.param_name || voice.name" :title="voice.name || voice.remark"
             >
               {{ voice.name }}
             </NRadio>
