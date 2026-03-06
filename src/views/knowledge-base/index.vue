@@ -32,7 +32,7 @@ const { kbUuid: currKbUuid } = route.params as { kbUuid: string }
 console.log('currKbUUid', currKbUuid)
 const showReferenceModal = ref<boolean>(false)
 const showReferenceRecordUuid = ref<string>('')
-const references = ref<KnowledgeBase.QaRecordReference[]>([])
+const references = ref<KnowledgeBase.QaRecordEmbeddingRef[]>([])
 const showRefGraphModal = ref<boolean>(false)
 const showRefGraphRecordUuid = ref<string>('')
 const prompt = ref<string>('')

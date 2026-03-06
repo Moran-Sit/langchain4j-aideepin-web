@@ -438,9 +438,15 @@ function messageTextByAudio<T = any>(audioUuid: string) {
   })
 }
 
-function messageEmbeddingRef<T = any>(msgUuid: string) {
+function memoryEmbeddingRef<T = any>(msgUuid: string) {
   return get<T>({
-    url: `/conversation/message/embedding-ref/${msgUuid}`,
+    url: `/conversation/message/memory-embedding-ref/${msgUuid}`,
+  })
+}
+
+function knowledgeEmbeddingRef<T = any>(msgUuid: string) {
+  return get<T>({
+    url: `/conversation/message/knowledge-embedding-ref/${msgUuid}`,
   })
 }
 
@@ -818,7 +824,8 @@ export default {
   drawCommentAdd,
   messageDel,
   messageTextByAudio,
-  messageEmbeddingRef,
+  memoryEmbeddingRef,
+  knowledgeEmbeddingRef,
   messageGraphRef,
   knowledgeBaseInfo,
   knowledgeBaseStar,

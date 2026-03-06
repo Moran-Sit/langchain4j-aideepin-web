@@ -13,8 +13,9 @@ declare namespace Chat {
 		children: ChatMessage[] //AI回复的消息
 		aiModelPlatform?: string
 		attachmentUrls: string[]
-		isRefEmbedding: boolean //是否是引用资料
-		isRefGraph: boolean //是否是引用图谱
+		isRefMemoryEmbedding: boolean //是否引用记忆向量
+		isRefEmbedding: boolean //是否是引用知识库向量
+		isRefGraph: boolean //是否是引用知识库图谱
 
 		//Frontend only
 		inversion?: boolean
@@ -94,7 +95,8 @@ declare namespace Chat {
 		chats: ConvWithMessages[]
 		loadingMsgs: Set<string>
 		presetConvs: ConversationPreset[]
-		msgToEmbeddingRef: Map<string, KnowledgeBase.QaRecordReference[]>
+		msgToMemoryRef: Map<string, MemoryEmbedding[]>
+		msgToEmbeddingRef: Map<string, KnowledgeBase.QaRecordEmbeddingRef[]>
     msgToGraphRef: Map<string, KnowledgeBase.QaRecordGraphRef>
     loadingGraphRef: Map<string, boolean>
 	}
@@ -204,4 +206,9 @@ declare namespace Chat {
 		publicDraws: Draw[]
 		myStarDraws: Draw[]
 	}
+
+	 interface MemoryEmbedding {
+    embeddingId: string
+    text: string
+  }
 }

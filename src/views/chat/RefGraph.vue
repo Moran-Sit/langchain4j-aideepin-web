@@ -70,7 +70,7 @@ async function loadGraph() {
   try {
     const resp = await api.messageGraphRef<KnowledgeBase.KbItemGraphResp>(curQaRecordUuid)
     if (resp.data)
-      chatStore.setMsgGraphRef(curQaRecordUuid, { ...resp.data })
+      chatStore.setKnowledgeGraphRef(curQaRecordUuid, { ...resp.data })
   } finally {
     chatStore.setLoadingGraphRef(curQaRecordUuid, false)
 
