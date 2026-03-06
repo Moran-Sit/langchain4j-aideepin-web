@@ -48,11 +48,15 @@ const currConv = computed(() => chatStore.getCurConv || defaultConv())
 const imageUuids = ref<string[]>([])
 const isChatting = ref<boolean>(false)
 const loadingMsgs = ref<boolean>(false)
+const loaddingMemory = ref<boolean>(false)
 const loaddingEmbeddingRef = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
+const showMemoryModal = ref<boolean>(false)
+const selectedMemoryMsgUuid = ref<string>('')
+const memoryEmbeddings = ref<Chat.MemoryEmbedding[]>([])
 const showRefEmbeddingModal = ref<boolean>(false)
 const showRefEmbeddingMsgUuid = ref<string>('')
-const embeddingRefs = ref<KnowledgeBase.QaRecordReference[]>([])
+const knowledgeEmbeddingRef = ref<KnowledgeBase.QaRecordEmbeddingRef[]>([])
 const showRefGraphModal = ref<boolean>(false)
 const showRefGraphMsgUuid = ref<string>('')
 
@@ -91,20 +95,40 @@ function handleStop() {
   inputEditorRef.value?.handleStop()
 }
 
-// 打开引用
+// 打开记忆
+async function handleMemoryRefClick(qaRecordUuid: string) {
+  console.log('handleMemoryRefClick', qaRecordUuid)
+  showMemoryModal.value = true
+  selectedMemoryMsgUuid.value = qaRecordUuid
+  memoryEmbeddings.value = chatStore.getMemory(qaRecordUuid)
+  if (memoryEmbeddings.value.length === 0) {
+    loaddingMemory.value = true
+    try {
+      const { data } = await api.memoryEmbeddingRef(qaRecordUuid)
+      chatStore.setMemoryRefs(qaRecordUuid, data)
+
+      // 显示最后一次点击的引用
+      memoryEmbeddings.value = chatStore.getMemory(selectedMemoryMsgUuid.value)
+    } finally {
+      loaddingMemory.value = false
+    }
+  }
+}
+
+// 打开知识库引用
 async function handleEmbeddingRefClick(qaRecordUuid: string) {
   showRefEmbeddingModal.value = true
   showRefEmbeddingMsgUuid.value = qaRecordUuid
-  embeddingRefs.value = []
-  embeddingRefs.value = chatStore.getReferences(qaRecordUuid)
-  if (embeddingRefs.value.length === 0) {
+  knowledgeEmbeddingRef.value = []
+  knowledgeEmbeddingRef.value = chatStore.getReferences(qaRecordUuid)
+  if (knowledgeEmbeddingRef.value.length === 0) {
     loaddingEmbeddingRef.value = true
     try {
-      const { data } = await api.messageEmbeddingRef(qaRecordUuid)
-      chatStore.setMsgReferences(qaRecordUuid, data)
+      const { data } = await api.knowledgeEmbeddingRef(qaRecordUuid)
+      chatStore.setKnowledgeEmbeddingRefs(qaRecordUuid, data)
 
       // 显示最后一次点击的引用
-      embeddingRefs.value = chatStore.getReferences(showRefEmbeddingMsgUuid.value)
+      knowledgeEmbeddingRef.value = chatStore.getReferences(showRefEmbeddingMsgUuid.value)
     } finally {
       loaddingEmbeddingRef.value = false
     }
@@ -270,6 +294,7 @@ async function onRegenerate(questionUuid: string) {
         error: false,
         loading: true,
         attachmentUrls: [],
+        isRefMemoryEmbedding: false,
         isRefEmbedding: false,
         isRefGraph: false,
         audioPlayState,
@@ -507,6 +532,12 @@ onDeactivated(() => {
                     >
                       <div class="flex items-center space-x-2 mt-2">
                         <NButton
+                          v-if="!!answer && !answer.loading && answer.isRefMemoryEmbedding" size="tiny" text
+                          type="primary" @click="handleMemoryRefClick(answer.uuid)"
+                        >
+                          记忆
+                        </NButton>
+                        <NButton
                           v-if="!!answer && !answer.loading && answer.isRefEmbedding" size="tiny" text
                           type="primary" @click="handleEmbeddingRefClick(answer.uuid)"
                         >
@@ -528,6 +559,12 @@ onDeactivated(() => {
                       @delete="handleDelete(qaMessage.uuid, answer.uuid)"
                     >
                       <div class="flex items-center space-x-2 mt-2">
+                        <NButton
+                          v-if="!!answer && !answer.loading && answer.isRefMemoryEmbedding" size="tiny" text
+                          type="primary" @click="handleMemoryRefClick(answer.uuid)"
+                        >
+                          记忆
+                        </NButton>
                         <NButton
                           v-if="!!answer && !answer.loading && answer.isRefEmbedding" size="tiny" text
                           type="primary" @click="handleEmbeddingRefClick(answer.uuid)"
@@ -558,6 +595,12 @@ onDeactivated(() => {
                 >
                   <div class="flex items-center space-x-2 mt-2">
                     <NButton
+                      v-if="!!qaMessage.children[0] && !qaMessage.children[0].loading && qaMessage.children[0].isRefMemoryEmbedding" size="tiny" text
+                      type="primary" @click="handleMemoryRefClick(qaMessage.children[0].uuid)"
+                    >
+                      记忆
+                    </NButton>
+                    <NButton
                       v-if="!!qaMessage.children[0] && !qaMessage.children[0].loading && qaMessage.children[0].isRefEmbedding"
                       size="tiny" text type="primary" @click="handleEmbeddingRefClick(qaMessage.children[0].uuid)"
                     >
@@ -580,6 +623,12 @@ onDeactivated(() => {
                   @delete="handleDelete(qaMessage.uuid, qaMessage.children[0].uuid)"
                 >
                   <div class="flex items-center space-x-4 mt-2">
+                    <NButton
+                      v-if="!!qaMessage.children[0] && !qaMessage.children[0].loading && qaMessage.children[0].isRefMemoryEmbedding" size="tiny" text
+                      type="primary" @click="handleMemoryRefClick(qaMessage.children[0].uuid)"
+                    >
+                      记忆
+                    </NButton>
                     <NButton
                       v-if="!!qaMessage.children[0] && !qaMessage.children[0].loading && qaMessage.children[0].isRefEmbedding"
                       size="tiny" text type="primary" @click="handleEmbeddingRefClick(qaMessage.children[0].uuid)"
@@ -630,13 +679,28 @@ onDeactivated(() => {
     </footer>
 
     <NModal v-model:show="showRefEmbeddingModal" style="max-width: 80%;" preset="card" title="引用资料">
-      <div v-show="embeddingRefs.length === 0" class="flex items-center justify-center h-64">
+      <div v-show="knowledgeEmbeddingRef.length === 0" class="flex items-center justify-center h-64">
         <span v-show="!loaddingEmbeddingRef">无数据</span>
         <SvgIcon v-show="loaddingEmbeddingRef" icon="line-md:loading-loop" class="text-2xl text-green-800 w-12 h-12" />
       </div>
-      <NCollapse v-show="embeddingRefs.length > 0" :default-expanded-names="['refer_0']">
+      <NCollapse v-show="knowledgeEmbeddingRef.length > 0" :default-expanded-names="['refer_0']">
         <NCollapseItem
-          v-for="(reference, idx) of embeddingRefs" :key="reference.id" :title="`引用${idx + 1}`"
+          v-for="(reference, idx) of knowledgeEmbeddingRef" :key="reference.embeddingId" :title="`引用${idx + 1}`"
+          :name="`refer_${idx}`"
+        >
+          {{ reference.text }}
+        </NCollapseItem>
+      </NCollapse>
+    </NModal>
+
+    <NModal v-model:show="showMemoryModal" style="max-width: 80%;" preset="card" title="命中的记忆">
+      <div v-show="memoryEmbeddings.length === 0" class="flex items-center justify-center h-64">
+        <span v-show="!loaddingMemory">无数据</span>
+        <SvgIcon v-show="loaddingMemory" icon="line-md:loading-loop" class="text-2xl text-green-800 w-12 h-12" />
+      </div>
+      <NCollapse v-show="memoryEmbeddings.length > 0" :default-expanded-names="['refer_0']">
+        <NCollapseItem
+          v-for="(reference, idx) of memoryEmbeddings" :key="reference.embeddingId" :title="`记忆${idx + 1}`"
           :name="`refer_${idx}`"
         >
           {{ reference.text }}

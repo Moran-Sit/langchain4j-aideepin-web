@@ -86,8 +86,8 @@ declare namespace KnowledgeBase {
     aiModelPlatform?: string
   }
 
-  interface QaRecordReference {
-    id: string
+  interface QaRecordEmbeddingRef {
+    embeddingId: string
     text: string
   }
 
@@ -103,7 +103,7 @@ declare namespace KnowledgeBase {
     publicKbInfos: Info[]
     kbUuidToQaRecords: Map<string, QaRecordInfo[]>
     kbUuidToStarInfo: Map<string, KbStarInfo>
-    qaRecordToReferences: Map<string, KnowledgeBase.QaRecordReference[]>
+    qaRecordToEmbeddingRef: Map<string, KnowledgeBase.QaRecordEmbeddingRef[]>
     qaRecordToGraphRef: Map<string, KnowledgeBase.QaRecordGraphRef>
     loadingGraphRef: Map<string, boolean>
     loadingRecords: Map<string, boolean>

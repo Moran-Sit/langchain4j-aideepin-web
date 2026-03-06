@@ -59,6 +59,14 @@ export const useChatStore = defineStore('chat-store', {
       }
     },
 
+    getMemory(state: Chat.ChatState) {
+      return (msgUuid: string) => {
+        const references = state.msgToMemoryRef.get(msgUuid)
+        if (references)
+          return references
+        return []
+      }
+    },
     getReferences(state: Chat.ChatState) {
       return (msgUuid: string) => {
         const references = state.msgToEmbeddingRef.get(msgUuid)
@@ -357,11 +365,15 @@ export const useChatStore = defineStore('chat-store', {
       }
     },
 
-    setMsgReferences(msgUuid: string, references: KnowledgeBase.QaRecordReference[]) {
+    setMemoryRefs(msgUuid: string, reference: Chat.MemoryEmbedding[]) {
+      this.msgToMemoryRef.set(msgUuid, reference)
+    },
+
+    setKnowledgeEmbeddingRefs(msgUuid: string, references: KnowledgeBase.QaRecordEmbeddingRef[]) {
       this.msgToEmbeddingRef.set(msgUuid, !references ? [] : references)
     },
 
-    setMsgGraphRef(msgUuid: string, graphRef: KnowledgeBase.QaRecordGraphRef) {
+    setKnowledgeGraphRef(msgUuid: string, graphRef: KnowledgeBase.QaRecordGraphRef) {
       this.msgToGraphRef.set(msgUuid, graphRef)
     },
 
