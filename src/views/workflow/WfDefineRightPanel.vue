@@ -48,7 +48,7 @@ onMounted(() => {
 <template>
   <div class="absolute right-0 top-20 bg-white rounded-lg shadow-xl">
     <!-- 右侧属性面板 -->
-    <div v-if="!hidePropertyPanel && wfNode" class="px-3 pt-5 h-full" style="width:600px">
+    <div v-if="!hidePropertyPanel && wfNode" class="px-3 py-5 h-full" style="width:600px">
       <div class="w-full flex flex-col border-b divide-gray-400 pb-3 mb-5">
         <div class="text-3xl flex items-center h-10 mb-2">
           <SvgIcon

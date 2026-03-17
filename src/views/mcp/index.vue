@@ -89,6 +89,7 @@ async function onSaveConfig() {
 }
 
 async function loadMyUserMcpList(showLoaddingBar = true) {
+  // TODO Fix Why mcpStore.myUserMcpList.length > 0 时不能加载？ Why appendMyUserMcpList追加逻辑？
   if (mcpStore.userMcpLoading || !authStore.token || mcpStore.myUserMcpList.length > 0)
     return
   if (showLoaddingBar)

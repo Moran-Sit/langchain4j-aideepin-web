@@ -104,6 +104,8 @@ onNodesChange((changes: NodeChange[]) => {
 onEdgesChange((changes) => {
   // changes are arrays of type `EdgeChange`
   console.log(changes)
+  hidePropertyPanel.value = true
+  selectedWfNode.value = null
 })
 
 /**
@@ -240,7 +242,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="chat-box flex flex-col w-full h-full">
+  <div class="chat-box flex flex-col w-full h-full overflow-hidden">
     <main class="flex-1 overflow-hidden">
       <div ref="scrollRef" class="h-full overflow-hidden overflow-y-auto">
         <div class="flex h-full">
@@ -248,7 +250,7 @@ onUnmounted(() => {
             <NLayout has-sider class="h-full">
               <NLayoutSider
                 collapse-mode="transform" show-trigger="bar" :collapsed-width="12" :width="240"
-                :show-collapsed-content="false" content-style="padding: 12px;" bordered
+                :show-collapsed-content="false" content-style="padding: 5px 12px;"
               >
                 <!-- 节点菜单 -->
                 <WfDefineSidebar />
@@ -371,8 +373,8 @@ onUnmounted(() => {
 }
 
 .dndflow aside {
-  border-right: 1px solid #eee;
-  padding: 15px 10px;
+  //border-right: 1px solid #eee;
+  //padding: 15px 10px;
   font-size: 12px;
   background: #fcfcfc;
 }

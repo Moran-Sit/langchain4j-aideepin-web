@@ -16,6 +16,12 @@ module.exports = {
           '50%': { 'background-color': 'transparent' },
         },
       },
+      colors: {
+        naive: {
+          primary: 'var(--n-primary-color)',
+          text: 'var(--n-text-color)',
+        },
+      },
     },
   },
   plugins: [],

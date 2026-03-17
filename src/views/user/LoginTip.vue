@@ -1,8 +1,13 @@
 <script setup lang='ts'>
 import { NButton, NIcon } from 'naive-ui'
 import { Cat } from '@vicons/fa'
+import { onMounted } from 'vue'
 import { useAuthStore } from '@/store'
 const authStore = useAuthStore()
+onMounted(() => {
+  if (!authStore.token)
+    authStore.setLoginView(true)
+})
 </script>
 
 <template>

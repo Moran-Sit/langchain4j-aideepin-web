@@ -314,7 +314,7 @@ onUnmounted(() => {
     <div class="flex flex-col items-center justify-between space-y-2 max-h-[300px] overflow-y-auto">
       <template v-if="!humanFeedback">
         <div v-for="(userInput, idx) in userInputs" :key="`${idx}_${userInput.name}`" class="w-full flex">
-          <div class="min-w-24">
+          <div class="min-w-24 content-center">
             {{ userInput.content.title }}
           </div>
           <!-- 文本 -->

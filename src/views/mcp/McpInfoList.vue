@@ -37,7 +37,7 @@ async function loadMcpPage(page: number) {
     const { data } = await api.mcpSearch<Mcp.McpInfoListResp>('', page, pageSize)
     data.records.forEach((mcp) => {
       const userMcp = mcpStore.myUserMcpList.find(userMcp => userMcp.mcpId === mcp.id)
-      if (userMcp) {
+      if (userMcp && userMcp.isEnable) {
         mcp.configured = true
         mcp.customizedParamDefinitions.forEach((uninitParam) => {
           const paramSetting = userMcp.mcpCustomizedParams.find(varItem => varItem.name === uninitParam.name)

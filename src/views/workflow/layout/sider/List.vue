@@ -101,7 +101,7 @@ onMounted(() => {
 <template>
   <NTabs v-model:value="selectedType" tab-class="h-10" pane-class="h-full" type="line" justify-content="space-evenly">
     <NTabPane name="mine" tab="我的" size="small">
-      <div class="flex flex-col space-y-2" :style="`height:${innerHeight}px`">
+      <div class="flex flex-col space-y-2" :style="`max-height:${innerHeight}px`">
         <div class="px-4">
           <NButton dashed block @click="handleAdd">
             新建应用

@@ -27,8 +27,12 @@ function selected(modelName: string) {
         模型
       </div>
       <div>
-        <WfImageModelSelector
+        <!--        <WfImageModelSelector
           :model-name="nodeConfig.model_name" platform="dashscope" :exclulde-model-names="['wanx-background-generation-v2']"
+          @image-model-selected="selected"
+        /> -->
+        <WfImageModelSelector
+          :model-name="nodeConfig.model_name" :exclulde-model-names="['wanx-background-generation-v2']"
           @image-model-selected="selected"
         />
       </div>

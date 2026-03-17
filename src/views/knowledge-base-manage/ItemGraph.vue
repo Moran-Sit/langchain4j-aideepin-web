@@ -161,7 +161,7 @@ function relayout() {
         <NDivider title-placement="left">
           名称
         </NDivider>
-        <div>{{ selectedVertex.name }}</div>
+        <div>{{ selectedVertex.label }}:{{ selectedVertex.name }}</div>
         <NDivider title-placement="left">
           描述
         </NDivider>

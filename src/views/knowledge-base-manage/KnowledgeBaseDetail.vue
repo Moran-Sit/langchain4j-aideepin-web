@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
-import { NAlert, NBreadcrumb, NBreadcrumbItem, NButton, NCard, NCheckbox, NCheckboxGroup, NDataTable, NFlex, NIcon, NInput, NModal, NP, NSpace, NTag, NText, NUpload, NUploadDragger, useDialog, useMessage } from 'naive-ui'
+import { NAlert, NBreadcrumb, NBreadcrumbItem, NButton, NCard, NCheckbox, NCheckboxGroup, NDataTable, NFlex, NIcon, NInput, NModal, NP, NSpace, NSpin, NTag, NText, NUpload, NUploadDragger, useDialog, useMessage } from 'naive-ui'
 import { ArchiveOutline } from '@vicons/ionicons5'
 import { Cloud32Regular, LockClosed32Regular } from '@vicons/fluent'
 import { useRoute } from 'vue-router'
@@ -398,20 +398,25 @@ watch(
 
   <NModal
     v-model:show="showItemEditModal" :style="`width: 90%; min-height:500px; max-height: ${modalMainHeight}px`" preset="card"
-    title="知识点-新增|编辑"
+    title="知识点-新增|编辑" :mask-closable="false"
   >
     <NSpace vertical>
-      {{ t('store.title') }}
-      <NInput v-model:value="tmpItem.title" maxlength="100" show-count />
-      摘要
-      <NInput v-model:value="tmpItem.brief" type="textarea" show-count :autosize="{ minRows: 2, maxRows: 5 }" />
-      内容
-      <NInput v-model:value="tmpItem.remark" type="textarea" show-count :autosize="{ minRows: 5, maxRows: 20 }" />
-      <div class="flex juestify-end">
-        <NButton type="primary" :disabled="inputStatus" @click="() => { saveOrUpdate() }">
-          {{ t('common.confirm') }}
-        </NButton>
-      </div>
+      <NSpin :show="submitting && !tmpItem.brief">
+        {{ t('store.title') }}
+        <NInput v-model:value="tmpItem.title" maxlength="100" show-count />
+        摘要
+        <NInput v-model:value="tmpItem.brief" type="textarea" show-count :autosize="{ minRows: 2, maxRows: 5 }" />
+        内容
+        <NInput v-model:value="tmpItem.remark" style="max-height: 320px;" type="textarea" show-count :autosize="{ minRows: 5, maxRows: 20 }" />
+        <div class="flex justify-end mt-2">
+          <NButton type="primary" :disabled="inputStatus" @click="() => { saveOrUpdate() }">
+            {{ t('common.confirm') }}
+          </NButton>
+        </div>
+        <template #description>
+          摘要生成中
+        </template>
+      </NSpin>
     </NSpace>
   </NModal>
 
